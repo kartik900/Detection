@@ -12,11 +12,16 @@ class Program
 
         // Display the list of strings
 
-
+        List<string> stringList =
+        [
+            "25f9de8ba11300bc0c551d963817fbe5",
+            "96ab66f2368cf458dbc8574216155898",
+            "fa94282be9a3a5ea19268d2aebb29a05"
+        ];
         // Folder to monitor
-        string folderPath = @"C:\Users\karthik\Desktop\";
+        string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         string knownHashesFilePath = @"C:\Users\karthik\Desktop\hash.txt";
-        List<string> knownHashes = LoadKnownHashes(knownHashesFilePath);
+        List<string> knownHashes = stringList;
 
         FileSystemWatcher watcher = new();
         watcher.Path = folderPath;
@@ -25,13 +30,18 @@ class Program
         watcher.NotifyFilter = NotifyFilters.FileName;
 
         // Subscribe to the event handler for new files
+        watcher.Filter = "*.exe"; // Filter only .exe files
         watcher.Created += (sender, e) =>
         {
+
             string filePath = e.FullPath;
             string fileName = Path.GetFileName(filePath);
             string fileHash = CalculateFileHash(filePath);
             if (knownHashes.Contains(fileHash))
-                MessageBox.Show($"Intrusion Detected : {fileName}.", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            {
+                MessageBox.Show($"Intrusion Detected : {filePath}.", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            }
         };
         watcher.EnableRaisingEvents = true;
         while (true)
