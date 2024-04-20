@@ -33,6 +33,7 @@ class Program
         watcher.Filter = "*.exe"; // Filter only .exe files
         watcher.Created += (sender, e) =>
         {
+            //copy to onedrive here
 
             string filePath = e.FullPath;
             string fileName = Path.GetFileName(filePath);
@@ -40,7 +41,7 @@ class Program
             if (knownHashes.Contains(fileHash))
             {
                 MessageBox.Show($"Intrusion Detected : {filePath}.", "Alert", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+                //copy deteced file to aother location and zip it to avoid infecion
             }
         };
         watcher.EnableRaisingEvents = true;
